@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOffers } from '../store/searchSlice';
+import { selectBestOfferKey, selectSearch } from '../store/selectors';
 import Section from './Section';
-import Loader from './Loader';
 import ErrorAlert from './ErrorAlert';
+import Icon from './Icon';
+import { TableSkeleton } from './Skeleton';
 
 const priceFormat = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' });
 
@@ -29,14 +31,19 @@ function WarehouseInfo({ row }) {
     <>
       {/* код есть не у всех складов (см. документацию) */}
       {row.noWarehouses ? 'нет на складах' : row.warehouse || 'склад без кода'}
-      {shipment && <span className="d-block small text-body-secondary">{shipment}</span>}
+      {shipment && (
+        <span className="d-flex align-items-center gap-1 small text-body-secondary">
+          <Icon name="truck" />
+          {shipment}
+        </span>
+      )}
     </>
   );
 }
 
-function OfferRow({ row }) {
+function OfferRow({ row, isBest }) {
   return (
-    <tr>
+    <tr className={isBest ? 'offer-best' : undefined}>
       <td>
         <div className="fw-semibold text-break">{row.name || 'Без названия'}</div>
         <div className="small text-body-secondary text-break">
@@ -50,7 +57,10 @@ function OfferRow({ row }) {
       <td className="d-none d-sm-table-cell">
         <WarehouseInfo row={row} />
       </td>
-      <td className="text-end text-nowrap">{formatPrice(row.price)}</td>
+      <td className="text-end text-nowrap">
+        {formatPrice(row.price)}
+        {isBest && <span className="d-block badge text-bg-success mt-1">лучшая цена</span>}
+      </td>
       <td className="text-end text-nowrap">
         <Stock stock={row.stock} />
       </td>
@@ -58,7 +68,7 @@ function OfferRow({ row }) {
   );
 }
 
-function Group({ title, rows }) {
+function Group({ title, rows, bestKey }) {
   if (!rows.length) return null;
   return (
     <tbody>
@@ -68,7 +78,7 @@ function Group({ title, rows }) {
         </th>
       </tr>
       {rows.map((row) => (
-        <OfferRow key={row.key} row={row} />
+        <OfferRow key={row.key} row={row} isBest={row.key === bestKey} />
       ))}
     </tbody>
   );
@@ -76,7 +86,8 @@ function Group({ title, rows }) {
 
 export default function OffersTable() {
   const dispatch = useDispatch();
-  const { number, selectedBrand, offers } = useSelector((state) => state.search);
+  const { number, selectedBrand, offers } = useSelector(selectSearch);
+  const bestKey = useSelector(selectBestOfferKey);
   const sectionRef = useRef(null);
 
   // на телефоне таблица ниже экрана — после выбора бренда прокручиваем к ней
@@ -91,7 +102,7 @@ export default function OffersTable() {
   const title = `Предложения: ${selectedBrand} ${number}`;
   let content;
   if (offers.status === 'loading') {
-    content = <Loader text="Загружаем предложения и аналоги…" />;
+    content = <TableSkeleton />;
   } else if (offers.status === 'failed') {
     content = (
       <ErrorAlert
@@ -101,15 +112,18 @@ export default function OffersTable() {
     );
   } else if (!offers.items.length) {
     content = (
-      <div className="alert alert-warning mb-0" role="status">
-        Предложений по {selectedBrand} {number} нет.
+      <div className="alert alert-warning d-flex align-items-center gap-2 mb-0" role="status">
+        <Icon name="search" className="fs-5 flex-shrink-0" />
+        <span>
+          Предложений по {selectedBrand} {number} нет.
+        </span>
       </div>
     );
   } else {
     const originals = offers.items.filter((row) => !row.isAnalogue);
     const analogues = offers.items.filter((row) => row.isAnalogue);
     content = (
-      <div className="table-responsive">
+      <div className="table-responsive offers-scroll">
         <table className="table table-hover align-middle mb-0 offers-table">
           <caption className="visually-hidden">
             Цены и остатки по складам для {selectedBrand} {number} и аналогов
@@ -128,8 +142,8 @@ export default function OffersTable() {
               </th>
             </tr>
           </thead>
-          <Group title="Запрошенная деталь" rows={originals} />
-          <Group title="Аналоги" rows={analogues} />
+          <Group title="Запрошенная деталь" rows={originals} bestKey={bestKey} />
+          <Group title="Аналоги" rows={analogues} bestKey={bestKey} />
         </table>
       </div>
     );

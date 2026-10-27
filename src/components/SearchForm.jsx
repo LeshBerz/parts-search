@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IS_DEMO } from '../api/partsApi';
 import { fetchBrands } from '../store/searchSlice';
+import { selectSearch } from '../store/selectors';
 import Section from './Section';
+import Icon from './Icon';
 
 const DEMO_NUMBERS = ['7160500039S', 'OC90', 'ERROR'];
 
 export default function SearchForm() {
   const dispatch = useDispatch();
-  const { number: searchedNumber, brands } = useSelector((state) => state.search);
+  const { number: searchedNumber, brands } = useSelector(selectSearch);
   const [number, setNumber] = useState('');
 
   const value = number.trim();
@@ -49,8 +51,16 @@ export default function SearchForm() {
             enterKeyHint="search"
             autoFocus
           />
-          <button type="submit" className="btn btn-primary px-4" disabled={!value || isSearchingThis}>
-            {isSearchingThis && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true" />}
+          <button
+            type="submit"
+            className="btn btn-primary d-inline-flex align-items-center gap-2 px-4"
+            disabled={!value || isSearchingThis}
+          >
+            {isSearchingThis ? (
+              <span className="spinner-border spinner-border-sm" aria-hidden="true" />
+            ) : (
+              <Icon name="search" />
+            )}
             Найти
           </button>
         </div>

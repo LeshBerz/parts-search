@@ -1,4 +1,12 @@
-/* Немного своих стилей поверх Bootstrap — только то, чего в нём нет */
+/* Немного своих стилей поверх Bootstrap — только то, чего в нём нет.
+   Цвета, радиусы и тени берём из CSS-переменных Bootstrap, чтобы всё было в одном стиле. */
+
+:root {
+  /* Inter: вариативный шрифт — один файл на все начертания, кириллица грузится отдельным
+     поднабором (unicode-range), font-display: swap — текст виден сразу, ещё до загрузки шрифта */
+  --bs-body-font-family: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --app-radius: var(--bs-border-radius-lg);
+}
 
 body {
   background-color: var(--bs-tertiary-bg);
@@ -6,6 +14,25 @@ body {
 
 .app {
   max-width: 960px;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.app-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--app-radius);
+  background-color: var(--bs-primary);
+  color: #fff;
+  font-size: 1.5rem;
 }
 
 .step-number {
@@ -20,6 +47,55 @@ body {
   color: #fff;
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+/* Сетка брендов: колонок столько, сколько влезает карточек шириной от 15rem.
+   min(100%, …) — чтобы на узком экране карточка не вылезала за край */
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+}
+
+.brand-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--app-radius);
+  background-color: var(--bs-body-bg);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+button.brand-card:hover {
+  border-color: var(--bs-primary-border-subtle);
+  box-shadow: var(--bs-box-shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* фокус с клавиатуры виден так же, как у остальных элементов Bootstrap */
+.brand-card:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.brand-card[aria-pressed='true'] {
+  border-color: var(--bs-primary);
+  background-color: var(--bs-primary-bg-subtle);
+}
+
+/* .table-responsive включает overflow по обеим осям, а нижняя граница таблицы
+   вылезает на 1px — без этого появлялась лишняя вертикальная полоса прокрутки */
+.offers-scroll {
+  overflow-y: hidden;
 }
 
 /* цифры одинаковой ширины — цены и остатки ровно встают в столбец */
@@ -42,7 +118,25 @@ body {
   text-transform: uppercase;
 }
 
+/* лучшее предложение подсвечиваем полосой слева, а не заливкой всей строки.
+   Вторая тень — та, которой Bootstrap рисует фон ячейки (иначе пропал бы hover) */
+.offer-best > td:first-child {
+  box-shadow:
+    inset 3px 0 0 var(--bs-success),
+    inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
+}
+
 /* при автопрокрутке к таблице оставляем небольшой отступ сверху */
 .offers-anchor {
   scroll-margin-top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-card {
+    transition: none;
+  }
+
+  button.brand-card:hover {
+    transform: none;
+  }
 }
