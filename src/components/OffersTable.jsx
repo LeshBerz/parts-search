@@ -94,7 +94,10 @@ export default function OffersTable() {
     content = <Loader text="Загружаем предложения и аналоги…" />;
   } else if (offers.status === 'failed') {
     content = (
-      <ErrorAlert message={offers.error} onRetry={() => dispatch(fetchOffers({ number, brand: selectedBrand }))} />
+      <ErrorAlert
+        message={offers.error}
+        onRetry={() => dispatch(fetchOffers({ number, brand: selectedBrand }))}
+      />
     );
   } else if (!offers.items.length) {
     content = (

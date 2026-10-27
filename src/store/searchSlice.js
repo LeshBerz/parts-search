@@ -4,7 +4,8 @@ import { requestGoods } from '../api/partsApi';
 // Цена и остаток иногда приходят строкой («8680.20», «1 200,5») — приводим к числу или null
 export function toNumber(value) {
   if (value == null || value === '') return null;
-  const number = typeof value === 'number' ? value : Number(String(value).replace(/\s/g, '').replace(',', '.'));
+  const number =
+    typeof value === 'number' ? value : Number(String(value).replace(/\s/g, '').replace(',', '.'));
   return Number.isFinite(number) ? number : null;
 }
 
@@ -39,7 +40,15 @@ function toRows(item, isAnalogue, itemIndex) {
   // складов нет — товар есть в каталоге, но купить его негде
   if (!warehouses.length) {
     return [
-      { ...base, key: `${itemIndex}`, noWarehouses: true, warehouse: null, shipmentDate: null, price: null, stock: 0 },
+      {
+        ...base,
+        key: `${itemIndex}`,
+        noWarehouses: true,
+        warehouse: null,
+        shipmentDate: null,
+        price: null,
+        stock: 0,
+      },
     ];
   }
   return warehouses.map((warehouse, index) => ({
