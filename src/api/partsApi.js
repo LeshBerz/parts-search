@@ -1,6 +1,6 @@
 import { mockRequest } from './mock';
 
-// Флаг задаётся в vite.config.js: ключа нет на сервере → работаем на демо-данных
+// Флаг задаётся в vite.config.js: не заданы адрес или ключ API → работаем на демо-данных
 export const IS_DEMO = __DEMO_MODE__;
 
 const TIMEOUT_MS = 15000;

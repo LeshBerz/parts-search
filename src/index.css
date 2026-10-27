@@ -103,6 +103,13 @@ button.brand-card:hover {
   font-variant-numeric: tabular-nums;
 }
 
+/* на телефоне чуть мельче, чтобы названия товаров не разбивались по одному слову */
+@media (max-width: 575.98px) {
+  .offers-table {
+    font-size: 0.875rem;
+  }
+}
+
 .offers-table thead th {
   color: var(--bs-secondary-color);
   font-size: 0.8125rem;
