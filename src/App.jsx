@@ -5,19 +5,23 @@ import OffersTable from './components/OffersTable';
 
 export default function App() {
   return (
-    <div className="container py-4" style={{ maxWidth: 960 }}>
-      <h1 className="h3 mb-1">Подбор автозапчастей</h1>
-      <p className="text-muted mb-4">Введите артикул, выберите производителя и получите предложения с аналогами.</p>
+    <main className="container app py-4 py-sm-5">
+      <header className="mb-4">
+        <h1 className="h3 fw-bold mb-1">Подбор автозапчастей</h1>
+        <p className="text-body-secondary mb-0">
+          Введите артикул, выберите производителя — покажем цены, остатки на складах и аналоги.
+        </p>
+      </header>
 
       {IS_DEMO && (
-        <div className="alert alert-info py-2">
-          Демо-режим: ключ API не задан. Попробуйте артикулы <b>7160500039S</b> или <b>OC90</b>.
+        <div className="alert alert-info py-2 small" role="note">
+          <strong>Демо-режим:</strong> ключ API не задан, данные тестовые. Как подключить ключ — в README.
         </div>
       )}
 
       <SearchForm />
       <BrandList />
       <OffersTable />
-    </div>
+    </main>
   );
 }

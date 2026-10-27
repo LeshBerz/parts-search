@@ -1,0 +1,48 @@
+/* Немного своих стилей поверх Bootstrap — только то, чего в нём нет */
+
+body {
+  background-color: var(--bs-tertiary-bg);
+}
+
+.app {
+  max-width: 960px;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background-color: var(--bs-primary);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* цифры одинаковой ширины — цены и остатки ровно встают в столбец */
+.offers-table {
+  font-variant-numeric: tabular-nums;
+}
+
+.offers-table thead th {
+  color: var(--bs-secondary-color);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.offers-group th {
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-secondary-color);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* при автопрокрутке к таблице оставляем небольшой отступ сверху */
+.offers-anchor {
+  scroll-margin-top: 1rem;
+}

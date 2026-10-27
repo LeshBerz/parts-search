@@ -9,6 +9,8 @@ const TIMEOUT_MS = 15000;
 const API_ERRORS = {
   'Empty key!': 'Не указан ключ покупателя.',
   'Invalid key client!': 'Неверный ключ покупателя.',
+  // нет в документации, но так API отвечает сейчас (HTTP 403) на неверный ключ
+  'Invalid access key': 'Неверный ключ покупателя.',
   'Empty number goods!': 'Не указан номер детали.',
   'Request quota exceeded!': 'Превышен лимит запросов. Попробуйте позже.',
 };
